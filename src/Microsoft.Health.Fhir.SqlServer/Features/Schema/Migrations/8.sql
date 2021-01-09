@@ -404,7 +404,7 @@ CREATE TYPE dbo.UriSearchParamTableType_2 AS TABLE
 (
     SearchParamId smallint NOT NULL,
     Uri varchar(256) COLLATE Latin1_General_100_CS_AS NOT NULL,
-    Version varchar(256) COLLATE Latin1_General_100_CS_AS NULL,
+    Version varchar(64) COLLATE Latin1_General_100_CS_AS NULL,
     Fragment varchar(256) COLLATE Latin1_General_100_CS_AS NULL
 )
 
@@ -414,9 +414,9 @@ CREATE TABLE dbo.UriSearchParam
     ResourceSurrogateId bigint NOT NULL,
     SearchParamId smallint NOT NULL,
     Uri varchar(256) COLLATE Latin1_General_100_CS_AS NOT NULL,
-    Version varchar(256) COLLATE Latin1_General_100_CS_AS NULL,
-    Fragment varchar(256) COLLATE Latin1_General_100_CS_AS NULL,
-    IsHistory bit NOT NULL
+    IsHistory bit NOT NULL,
+    Version varchar(64) COLLATE Latin1_General_100_CS_AS NULL,
+    Fragment varchar(256) COLLATE Latin1_General_100_CS_AS NULL
 ) WITH (DATA_COMPRESSION = PAGE)
 
 CREATE CLUSTERED INDEX IXC_UriSearchParam
