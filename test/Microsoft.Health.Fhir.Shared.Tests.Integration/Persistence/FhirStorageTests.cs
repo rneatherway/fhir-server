@@ -27,7 +27,6 @@ using Microsoft.Health.Fhir.Core.Features.Resources.Delete;
 using Microsoft.Health.Fhir.Core.Features.Resources.Get;
 using Microsoft.Health.Fhir.Core.Features.Resources.Upsert;
 using Microsoft.Health.Fhir.Core.Features.Search;
-using Microsoft.Health.Fhir.Core.Features.Search.Parameters;
 using Microsoft.Health.Fhir.Core.Features.Search.SearchValues;
 using Microsoft.Health.Fhir.Core.Features.Security.Authorization;
 using Microsoft.Health.Fhir.Core.Messages.Create;
@@ -58,7 +57,6 @@ namespace Microsoft.Health.Fhir.Tests.Integration.Persistence
         private readonly ResourceDeserializer _deserializer;
         private readonly FhirJsonParser _fhirJsonParser = new FhirJsonParser();
         private readonly IFhirDataStore _dataStore;
-        private readonly ISearchParameterUtilities _searchParameterUtilities;
 
         public FhirStorageTests(FhirStorageTestsFixture fixture)
         {
@@ -99,12 +97,10 @@ namespace Microsoft.Health.Fhir.Tests.Integration.Persistence
 
             var resourceIdProvider = new ResourceIdProvider();
 
-            _searchParameterUtilities = Substitute.For<ISearchParameterUtilities>();
-
-            collection.AddSingleton(typeof(IRequestHandler<CreateResourceRequest, UpsertResourceResponse>), new CreateResourceHandler(_dataStore, new Lazy<IConformanceProvider>(() => provider), resourceWrapperFactory, resourceIdProvider, new ResourceReferenceResolver(_searchService, new TestQueryStringParser()), DisabledFhirAuthorizationService.Instance, _searchParameterUtilities));
+            collection.AddSingleton(typeof(IRequestHandler<CreateResourceRequest, UpsertResourceResponse>), new CreateResourceHandler(_dataStore, new Lazy<IConformanceProvider>(() => provider), resourceWrapperFactory, resourceIdProvider, new ResourceReferenceResolver(_searchService, new TestQueryStringParser()), DisabledFhirAuthorizationService.Instance));
             collection.AddSingleton(typeof(IRequestHandler<UpsertResourceRequest, UpsertResourceResponse>), new UpsertResourceHandler(_dataStore, new Lazy<IConformanceProvider>(() => provider), resourceWrapperFactory, resourceIdProvider, DisabledFhirAuthorizationService.Instance, ModelInfoProvider.Instance));
             collection.AddSingleton(typeof(IRequestHandler<GetResourceRequest, GetResourceResponse>), new GetResourceHandler(_dataStore, new Lazy<IConformanceProvider>(() => provider), resourceWrapperFactory, resourceIdProvider, DisabledFhirAuthorizationService.Instance));
-            collection.AddSingleton(typeof(IRequestHandler<DeleteResourceRequest, DeleteResourceResponse>), new DeleteResourceHandler(_dataStore, new Lazy<IConformanceProvider>(() => provider), resourceWrapperFactory, resourceIdProvider, DisabledFhirAuthorizationService.Instance, _searchParameterUtilities));
+            collection.AddSingleton(typeof(IRequestHandler<DeleteResourceRequest, DeleteResourceResponse>), new DeleteResourceHandler(_dataStore, new Lazy<IConformanceProvider>(() => provider), resourceWrapperFactory, resourceIdProvider, DisabledFhirAuthorizationService.Instance));
 
             ServiceProvider services = collection.BuildServiceProvider();
 
